@@ -1,0 +1,18 @@
+{
+  "command": "npx",
+  "args": [
+    "-y",
+    "cld-omnisearch"
+  ],
+  "env": {
+    "TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily Search API Key (factual search with citations):}",
+    "BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API Key (privacy-focused search):}",
+    "KAGI_API_KEY": "{KAGI_API_KEY:Kagi API Key (high-quality search, FastGPT, summarizer):}",
+    "PERPLEXITY_API_KEY": "{PERPLEXITY_API_KEY:Perplexity AI API Key (AI-powered responses):}",
+    "JINA_AI_API_KEY": "{JINA_AI_API_KEY:Jina AI API Key (content processing, grounding):}",
+    "EXA_API_KEY": "{EXA_API_KEY:Exa AI API Key (neural search, similar pages):}",
+    "FIRECRAWL_API_KEY": "{FIRECRAWL_API_KEY:Firecrawl API Key (web scraping, crawling):}",
+    "GITHUB_API_KEY": "{GITHUB_API_KEY:GitHub Personal Access Token (no scopes needed):}",
+    "FIRECRAWL_BASE_URL": "{FIRECRAWL_BASE_URL:Self-hosted Firecrawl URL (optional):}"
+  }
+}

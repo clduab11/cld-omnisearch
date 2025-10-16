@@ -1,10 +1,38 @@
-# mcp-omnisearch
+# CLD Omnisearch
 
 A Model Context Protocol (MCP) server that provides unified access to
-multiple search providers and AI tools. This server combines the
+multiple search providers and AI tools, **optimized for Msty Studio**. This server combines the
 capabilities of Tavily, Perplexity, Kagi, Jina AI, Brave, Exa AI, and
 Firecrawl to offer comprehensive search, AI responses, content
 processing, and enhancement features through a single interface.
+
+## 🎯 Msty Studio Ready
+
+This fork is specifically enhanced for seamless integration with [Msty Studio](https://msty.ai/):
+
+- ✅ **Environment Variable Support**: Works with both standard and `MSTY_` prefixed variables
+- ✅ **One-Line Setup**: `npx -y cld-omnisearch` - no installation required
+- ✅ **Parameter Templates**: Full support for Msty's `{VAR:Description:Default}` syntax
+- ✅ **Complete Documentation**: Step-by-step guides for Desktop and Web (with Sidecar)
+- ✅ **Example Configurations**: Pre-made JSON configs for different use cases
+- ✅ **Flexible API Keys**: Only enable the providers you have keys for
+
+### Quick Start for Msty Studio
+
+```bash
+# Install and run with NPX (no prior installation needed)
+npx -y cld-omnisearch
+```
+
+Then configure in Msty Studio:
+1. **Toolbox** → **Add New Tool** → ID: `cld-omnisearch`
+2. **Use a template** from [`msty-configs/`](./msty-configs/) directory
+3. **Set API keys** in Msty Environments or tool parameters
+4. **Start chatting** with SOTA models that support tool calling
+
+📚 **[Full Msty Studio Setup Guide →](./MSTY_SETUP.md)**
+
+---
 
 <a href="https://glama.ai/mcp/servers/gz5wgmptd8">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/gz5wgmptd8/badge" alt="Glama badge" />
@@ -159,8 +187,76 @@ providers and add more as needed.
 
 ## Configuration
 
-This server requires configuration through your MCP client. Here are
-examples for different environments:
+This server requires configuration through your MCP client. 
+
+### 🎯 Msty Studio Configuration (Recommended)
+
+**CLD Omnisearch is optimized for Msty Studio!** For the best experience with Desktop or Web+Sidecar:
+
+#### Quick Setup
+
+1. **Open Msty Studio** → Toolbox → Tools → Add New Tool
+2. **Tool ID**: `cld-omnisearch`
+3. **Configuration**: Choose from pre-made templates in [`msty-configs/`](./msty-configs/):
+   - [`minimal-config.json`](./msty-configs/minimal-config.json) - Use with Msty Environments
+   - [`full-config-with-parameters.json`](./msty-configs/full-config-with-parameters.json) - All providers
+   - [`basic-search-only.json`](./msty-configs/basic-search-only.json) - Web search only
+   - [`ai-and-github.json`](./msty-configs/ai-and-github.json) - AI + code search
+
+4. **Set API Keys** using either:
+   - **Msty Environments** (recommended): Add variables like `MSTY_TAVILY_API_KEY`
+   - **Tool Parameters**: Click asterisk (*) icon next to tool
+
+📚 **[Complete Msty Studio Setup Guide →](./MSTY_SETUP.md)**
+
+#### Example: Minimal Configuration
+
+For use with Msty Environments:
+
+```json
+{
+  "command": "npx",
+  "args": ["-y", "cld-omnisearch"],
+  "env": {}
+}
+```
+
+Then set in **Msty Environments**:
+```
+MSTY_TAVILY_API_KEY = your-key-here
+MSTY_BRAVE_API_KEY = your-key-here
+MSTY_KAGI_API_KEY = your-key-here
+...
+```
+
+#### Example: With Parameters
+
+For tool-specific API keys:
+
+```json
+{
+  "command": "npx",
+  "args": ["-y", "cld-omnisearch"],
+  "env": {
+    "TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily Search API Key:}",
+    "BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API Key:}",
+    "KAGI_API_KEY": "{KAGI_API_KEY:Kagi API Key:}",
+    "PERPLEXITY_API_KEY": "{PERPLEXITY_API_KEY:Perplexity AI API Key:}",
+    "JINA_AI_API_KEY": "{JINA_AI_API_KEY:Jina AI API Key:}",
+    "EXA_API_KEY": "{EXA_API_KEY:Exa AI API Key:}",
+    "FIRECRAWL_API_KEY": "{FIRECRAWL_API_KEY:Firecrawl API Key:}",
+    "GITHUB_API_KEY": "{GITHUB_API_KEY:GitHub Token:}"
+  }
+}
+```
+
+**Note**: The `{VAR:Description:Default}` syntax is automatically handled by Msty Studio.
+
+---
+
+### Other MCP Clients
+
+Here are examples for different MCP client environments:
 
 ### Cline Configuration
 
@@ -949,9 +1045,66 @@ Please read CONTRIBUTING.md before opening a PR. In short:
   for HTTP, read keys from `src/config/env.ts`, respect timeouts, and
   surface errors via `ProviderError`.
 
+## Version History
+
+### v0.1.1 (October 16, 2025)
+- **Fixed**: Corrected environment variable name from `GITHUB_TOKEN` to `GITHUB_API_KEY` in all documentation
+- **Added**: `TOOL_VERIFICATION.md` - Comprehensive verification report documenting all 10 tools
+- **Updated**: All Msty Studio JSON configuration templates with correct variable names
+- **Improved**: Documentation accuracy with tool count correction (10 tools, not 13)
+
+### v0.1.0 (October 16, 2025)
+- **Enhanced**: Full Msty Studio optimization and compatibility
+- **Added**: Dual environment variable support (standard and `MSTY_` prefixed)
+- **Added**: `MSTY_SETUP.md` - 500+ line comprehensive setup guide
+- **Added**: `msty-configs/` directory with 4 pre-configured JSON templates
+- **Added**: `ENHANCEMENTS.md` - Technical summary of all improvements
+- **Renamed**: Package from `mcp-omnisearch` to `cld-omnisearch`
+- **Improved**: User-friendly error messages with emoji indicators
+- **Published**: First release to npm registry
+
+See [CHANGELOG-CLD.md](./CHANGELOG-CLD.md) for complete version history.
+
+## Credits & Contributions
+
+### Original Author
+**Scott Spence ([@spences10](https://github.com/spences10))**
+- Created the original `mcp-omnisearch` project
+- Architected the unified provider system
+- Integrated Tavily, Perplexity, Kagi, Jina AI, Brave, Exa, Firecrawl, and GitHub
+- Established the MCP server foundation
+
+### Enhanced for Msty Studio by clduab11
+**Christopher Dukes ([@clduab11](https://github.com/clduab11))**
+
+**v0.1.0-0.1.1 Contributions:**
+- Msty Studio optimization with dual environment variable support
+- Comprehensive documentation suite (MSTY_SETUP.md, ENHANCEMENTS.md, TOOL_VERIFICATION.md)
+- Pre-configured JSON templates for common Msty Studio scenarios
+- Enhanced error messages with actionable guidance
+- Source code verification and accuracy improvements
+- npm package publication and maintenance
+
+**Key Technical Improvements:**
+- Implemented `get_env_var()` function for automatic `MSTY_` prefix fallback
+- Created 4 Msty Studio configuration templates (minimal, full, basic, developer)
+- Verified all 10 tools against source code implementation
+- Corrected environment variable naming (GITHUB_API_KEY)
+- Enhanced validation messages with emoji indicators (✓, ⚠, ℹ, 💡)
+
+### Community
+Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
 ## License
 
 MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Package**: [`cld-omnisearch`](https://www.npmjs.com/package/cld-omnisearch)  
+**Repository**: [github.com/clduab11/cld-omnisearch](https://github.com/clduab11/cld-omnisearch)  
+**Original**: [github.com/spences10/mcp-omnisearch](https://github.com/spences10/mcp-omnisearch)  
+**Msty Studio**: [msty.ai](https://msty.ai/)
 
 ## Acknowledgments
 

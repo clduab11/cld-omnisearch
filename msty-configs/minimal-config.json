@@ -1,0 +1,8 @@
+{
+  "command": "npx",
+  "args": [
+    "-y",
+    "cld-omnisearch"
+  ],
+  "env": {}
+}

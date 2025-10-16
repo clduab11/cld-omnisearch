@@ -1,0 +1,12 @@
+{
+  "command": "npx",
+  "args": [
+    "-y",
+    "cld-omnisearch"
+  ],
+  "env": {
+    "PERPLEXITY_API_KEY": "{PERPLEXITY_API_KEY:Perplexity AI API Key:}",
+    "GITHUB_API_KEY": "{GITHUB_API_KEY:GitHub Personal Access Token (no scopes):}",
+    "KAGI_API_KEY": "{KAGI_API_KEY:Kagi API Key (for FastGPT):}"
+  }
+}

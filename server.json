@@ -1,19 +1,19 @@
 {
 	"$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
-	"name": "io.github.spences10/mcp-omnisearch",
-	"description": "MCP server for integrating Omnisearch with LLMs",
+	"name": "io.github.clduab11/cld-omnisearch",
+	"description": "MCP server for integrating Omnisearch with LLMs - Enhanced for Msty Studio",
 	"status": "active",
 	"repository": {
-		"url": "https://github.com/spences10/mcp-omnisearch",
+		"url": "https://github.com/clduab11/cld-omnisearch",
 		"source": "github"
 	},
-	"version": "0.0.15",
+	"version": "0.1.0",
 	"packages": [
 		{
 			"registry_type": "npm",
 			"registry_base_url": "https://registry.npmjs.org",
-			"identifier": "mcp-omnisearch",
-			"version": "0.0.15",
+			"identifier": "cld-omnisearch",
+			"version": "0.1.0",
 			"transport": {
 				"type": "stdio"
 			}

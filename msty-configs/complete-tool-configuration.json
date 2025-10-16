@@ -1,0 +1,79 @@
+{
+  "name": "cld-omnisearch",
+  "description": "Unified search across Tavily, Brave, Kagi, Exa, GitHub, Perplexity, Jina AI, and Firecrawl with 13 powerful tools",
+  "type": "mcp",
+  "config": {
+    "command": "npx",
+    "args": ["-y", "cld-omnisearch"],
+    "env": {
+      "MSTY_TAVILY_API_KEY": "{TAVILY_API_KEY:Your Tavily API key for web search:}",
+      "MSTY_BRAVE_API_KEY": "{BRAVE_API_KEY:Your Brave Search API key for web search:}",
+      "MSTY_KAGI_API_KEY": "{KAGI_API_KEY:Your Kagi API key for web search and summarization:}",
+      "MSTY_PERPLEXITY_API_KEY": "{PERPLEXITY_API_KEY:Your Perplexity API key for AI-powered search:}",
+      "MSTY_JINA_API_KEY": "{JINA_API_KEY:Your Jina AI API key for URL reading and grounding:}",
+      "MSTY_EXA_API_KEY": "{EXA_API_KEY:Your Exa AI API key for semantic search and content extraction:}",
+      "MSTY_FIRECRAWL_API_KEY": "{FIRECRAWL_API_KEY:Your Firecrawl API key for web scraping and crawling:}",
+      "MSTY_GITHUB_TOKEN": "{GITHUB_TOKEN:Your GitHub personal access token for code search:}"
+    }
+  },
+  "tools": {
+    "web_search": {
+      "description": "Search the web using Tavily, Brave, Kagi, or Exa",
+      "providers": ["tavily", "brave", "kagi", "exa"],
+      "category": "search"
+    },
+    "github_search": {
+      "description": "Search GitHub repositories, code, and users",
+      "search_types": ["code", "repositories", "users"],
+      "category": "search"
+    },
+    "ai_search": {
+      "description": "AI-powered search with reasoning using Perplexity, Kagi FastGPT, or Exa Answer",
+      "providers": ["perplexity", "kagi_fastgpt", "exa_answer"],
+      "category": "ai_response"
+    },
+    "firecrawl_process": {
+      "description": "Process URLs with Firecrawl (scrape, crawl, map, extract, actions)",
+      "modes": ["scrape", "crawl", "map", "extract", "actions"],
+      "category": "processing"
+    },
+    "exa_process": {
+      "description": "Process URLs with Exa AI (get contents or find similar pages)",
+      "modes": ["contents", "similar"],
+      "category": "processing"
+    },
+    "jina_reader_process": {
+      "description": "Convert URLs to LLM-friendly markdown using Jina Reader",
+      "category": "processing"
+    },
+    "kagi_summarizer_process": {
+      "description": "Summarize web content using Kagi Summarizer",
+      "category": "processing"
+    },
+    "tavily_extract_process": {
+      "description": "Extract structured data from URLs using Tavily",
+      "category": "processing"
+    },
+    "jina_grounding_enhance": {
+      "description": "Enhance content with factual grounding using Jina AI",
+      "category": "enhancement"
+    },
+    "kagi_enrichment_enhance": {
+      "description": "Enrich content with additional context using Kagi FastGPT",
+      "category": "enhancement"
+    }
+  },
+  "notes": {
+    "total_tools": 13,
+    "categories": {
+      "search": "web_search, github_search (2 tools)",
+      "ai_response": "ai_search (1 tool)",
+      "processing": "firecrawl_process, exa_process, jina_reader_process, kagi_summarizer_process, tavily_extract_process (5 tools)",
+      "enhancement": "jina_grounding_enhance, kagi_enrichment_enhance (2 tools)"
+    },
+    "auto_approval_recommendation": "For read-only operations (all search, processing, and enhancement tools), you can enable auto-approval in Msty Studio's Toolset configuration UI. All tools in this MCP server are safe for auto-approval as they only read/retrieve data and do not modify external systems.",
+    "required_for_full_functionality": "All 8 API keys are optional. The server will only load tools for which you provide valid API keys.",
+    "minimal_setup": "Start with just TAVILY_API_KEY for basic web search, then add others as needed.",
+    "documentation": "See MSTY_SETUP.md for detailed setup instructions"
+  }
+}

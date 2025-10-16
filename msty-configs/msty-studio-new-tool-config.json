@@ -1,0 +1,17 @@
+{
+  "command": "npx",
+  "args": [
+    "-y",
+    "cld-omnisearch"
+  ],
+  "env": {
+    "MSTY_TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily API key for web search:}",
+    "MSTY_BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API key for web search:}",
+    "MSTY_KAGI_API_KEY": "{KAGI_API_KEY:Kagi API key for web search and summarization:}",
+    "MSTY_PERPLEXITY_API_KEY": "{PERPLEXITY_API_KEY:Perplexity API key for AI-powered search:}",
+    "MSTY_JINA_API_KEY": "{JINA_API_KEY:Jina AI API key for URL reading and grounding:}",
+    "MSTY_EXA_API_KEY": "{EXA_API_KEY:Exa AI API key for semantic search:}",
+    "MSTY_FIRECRAWL_API_KEY": "{FIRECRAWL_API_KEY:Firecrawl API key for web scraping:}",
+    "MSTY_GITHUB_API_KEY": "{GITHUB_API_KEY:GitHub API key for code and repository search:}"
+  }
+}

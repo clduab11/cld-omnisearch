@@ -1,19 +1,34 @@
 // Environment variable configuration for the MCP Omnisearch server
+// Supports both standard and MSTY_ prefixed environment variables for Msty Studio compatibility
+
+/**
+ * Get environment variable with fallback to MSTY_ prefixed version
+ * This supports Msty Studio's environment variable system
+ */
+const get_env_var = (name: string): string | undefined => {
+	// First try the standard variable name
+	const standard_value = process.env[name];
+	if (standard_value) return standard_value;
+	
+	// Then try with MSTY_ prefix for Msty Studio compatibility
+	const msty_prefixed = `MSTY_${name}`;
+	return process.env[msty_prefixed];
+};
 
 // Search provider API keys
-export const TAVILY_API_KEY = process.env.TAVILY_API_KEY;
-export const BRAVE_API_KEY = process.env.BRAVE_API_KEY;
-export const KAGI_API_KEY = process.env.KAGI_API_KEY;
-export const GITHUB_API_KEY = process.env.GITHUB_API_KEY;
-export const EXA_API_KEY = process.env.EXA_API_KEY;
+export const TAVILY_API_KEY = get_env_var('TAVILY_API_KEY');
+export const BRAVE_API_KEY = get_env_var('BRAVE_API_KEY');
+export const KAGI_API_KEY = get_env_var('KAGI_API_KEY');
+export const GITHUB_API_KEY = get_env_var('GITHUB_API_KEY');
+export const EXA_API_KEY = get_env_var('EXA_API_KEY');
 
 // AI provider API keys
-export const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
+export const PERPLEXITY_API_KEY = get_env_var('PERPLEXITY_API_KEY');
 
 // Content processing API keys
-export const JINA_AI_API_KEY = process.env.JINA_AI_API_KEY;
-export const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
-export const FIRECRAWL_BASE_URL = process.env.FIRECRAWL_BASE_URL;
+export const JINA_AI_API_KEY = get_env_var('JINA_AI_API_KEY');
+export const FIRECRAWL_API_KEY = get_env_var('FIRECRAWL_API_KEY');
+export const FIRECRAWL_BASE_URL = get_env_var('FIRECRAWL_BASE_URL');
 
 // Provider configuration
 export const config = {
@@ -159,7 +174,7 @@ export const validate_config = () => {
 	else available_keys.push('PERPLEXITY_API_KEY');
 
 	if (!JINA_AI_API_KEY) missing_keys.push('JINA_AI_API_KEY');
-	else available_keys.push('JINA_AI_API_KEY');
+	else available_keys.push('JINA_AI_KEY');
 
 	if (!FIRECRAWL_API_KEY) missing_keys.push('FIRECRAWL_API_KEY');
 	else available_keys.push('FIRECRAWL_API_KEY');
@@ -169,19 +184,25 @@ export const validate_config = () => {
 
 	// Log available keys
 	if (available_keys.length > 0) {
-		console.error(`Found API keys for: ${available_keys.join(', ')}`);
+		console.error(`✓ Found API keys for: ${available_keys.join(', ')}`);
 	} else {
 		console.error(
-			'Warning: No API keys found. No providers will be available.',
+			'⚠ Warning: No API keys found. No providers will be available.',
+		);
+		console.error(
+			'💡 Msty Studio users: Set API keys in Environments (prefixed with MSTY_) or tool parameters',
 		);
 	}
 
 	// Log missing keys as informational
 	if (missing_keys.length > 0) {
 		console.warn(
-			`Missing API keys for: ${missing_keys.join(
+			`ℹ Missing API keys for: ${missing_keys.join(
 				', ',
 			)}. Some providers will not be available.`,
+		);
+		console.warn(
+			`💡 Msty Studio users: Add these to your Environment with MSTY_ prefix (e.g., MSTY_TAVILY_API_KEY)`,
 		);
 	}
 };
