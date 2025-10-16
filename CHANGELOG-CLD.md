@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2025-10-16
+
+### Verified
+
+- **Production testing completed**: Full Msty Studio compatibility confirmed through live testing
+- **All 10 tools validated**: web_search, github_search, ai_search, firecrawl_process, exa_process, jina_reader_process, kagi_summarizer_process, tavily_extract_process, jina_grounding_enhance, kagi_enrichment_enhance
+- **Environment variables working**: Both standard and MSTY_ prefixed variables confirmed functional
+- **Optional variables confirmed**: FIRECRAWL_BASE_URL validated as optional with automatic fallback to https://api.firecrawl.dev
+- **Ready for production**: Package is production-ready for Msty Studio Desktop and Web (with Sidecar)
+
+### Status
+
+- ✅ Msty Studio Desktop: Fully tested and working
+- ✅ Msty Studio Web + Sidecar: Fully tested and working
+- ✅ Environment variable system: Validated in production
+- ✅ All search providers: Confirmed operational
+- ✅ All AI response tools: Confirmed operational
+- ✅ All processing tools: Confirmed operational
+- ✅ All enhancement tools: Confirmed operational
+
 ## [0.1.1] - 2025-10-16
 
 ### Fixed

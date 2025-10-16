@@ -1047,6 +1047,13 @@ Please read CONTRIBUTING.md before opening a PR. In short:
 
 ## Version History
 
+### v0.1.2 (October 16, 2025)
+- **Verified**: Full Msty Studio compatibility confirmed with production testing
+- **Tested**: All 10 tools validated in live Msty Studio environment
+- **Confirmed**: Environment variable system working correctly with both standard and `MSTY_` prefixes
+- **Validated**: Optional `FIRECRAWL_BASE_URL` behavior with automatic fallback to default endpoint
+- **Status**: Production-ready for Msty Studio Desktop and Web (with Sidecar)
+
 ### v0.1.1 (October 16, 2025)
 - **Fixed**: Corrected environment variable name from `GITHUB_TOKEN` to `GITHUB_API_KEY` in all documentation
 - **Added**: `TOOL_VERIFICATION.md` - Comprehensive verification report documenting all 10 tools
