@@ -3,7 +3,9 @@
 > **Wiki Page ID**: `8e92766d04964f54bc3bef5c30e1ad4b`  
 > **Tags**: CI/CD, Templates, Best Practices
 
-This document provides comprehensive documentation for GitHub Actions workflows in the CLD Omnisearch repository, including the Linear↔Notion automation workflow.
+This document provides comprehensive documentation for GitHub Actions
+workflows in the CLD Omnisearch repository, including the
+Linear↔Notion automation workflow.
 
 ## Table of Contents
 
@@ -20,7 +22,9 @@ This document provides comprehensive documentation for GitHub Actions workflows 
 
 ## Overview
 
-CLD Omnisearch uses GitHub Actions for continuous integration and deployment. This wiki documents all workflows, their configurations, and integration patterns.
+CLD Omnisearch uses GitHub Actions for continuous integration and
+deployment. This wiki documents all workflows, their configurations,
+and integration patterns.
 
 ## Existing Workflows
 
@@ -28,12 +32,15 @@ CLD Omnisearch uses GitHub Actions for continuous integration and deployment. Th
 
 **File**: `.github/workflows/docker-image.yml`
 
-Automatically builds and pushes Docker images to GitHub Container Registry (GHCR) on:
+Automatically builds and pushes Docker images to GitHub Container
+Registry (GHCR) on:
+
 - Pushes to `main` branch
-- Tag creation (v*)
+- Tag creation (v\*)
 - Pull requests to `main` (build only, no push)
 
 **Key Features**:
+
 - Multi-platform builds (linux/amd64, linux/arm64)
 - Automated tagging with semantic versioning
 - Build caching for faster builds
@@ -41,7 +48,9 @@ Automatically builds and pushes Docker images to GitHub Container Registry (GHCR
 
 ## Linear↔Notion Automation
 
-The Linear↔Notion automation workflow synchronizes issue tracking between Linear and Notion databases, enabling seamless project management across both platforms.
+The Linear↔Notion automation workflow synchronizes issue tracking
+between Linear and Notion databases, enabling seamless project
+management across both platforms.
 
 ### Workflow Architecture
 
@@ -80,8 +89,10 @@ The Linear↔Notion automation workflow synchronizes issue tracking between Line
 **Workflow Components**:
 
 1. **Linear Webhook Trigger**: Listens for issue events from Linear
-2. **GitHub Actions Runner**: Processes webhook payloads and orchestrates sync
-3. **Notion API Integration**: Updates corresponding Notion database entries
+2. **GitHub Actions Runner**: Processes webhook payloads and
+   orchestrates sync
+3. **Notion API Integration**: Updates corresponding Notion database
+   entries
 4. **MCP Server**: Provides unified context for AI-powered automation
 
 **Data Flow**:
@@ -116,16 +127,18 @@ Before setting up the Linear↔Notion automation, ensure you have:
 
 Add the following secrets to your GitHub repository:
 
-**Navigate to**: Repository → Settings → Secrets and variables → Actions → New repository secret
+**Navigate to**: Repository → Settings → Secrets and variables →
+Actions → New repository secret
 
-| Secret Name | Description | How to Get |
-|-------------|-------------|------------|
-| `LINEAR_API_KEY` | Linear API authentication key | [Linear Settings → API](https://linear.app/settings/api) → Create new API key |
-| `NOTION_TOKEN` | Notion integration token | [Notion Integrations](https://www.notion.so/my-integrations) → New integration → Copy Internal Integration Token |
-| `NOTION_DATABASE_ID` | Target Notion database ID | Open Notion database → Share → Copy link → Extract ID from URL |
-| `LINEAR_WEBHOOK_SECRET` | Secret for webhook verification | Generate using: `openssl rand -hex 32` |
+| Secret Name             | Description                     | How to Get                                                                                                       |
+| ----------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `LINEAR_API_KEY`        | Linear API authentication key   | [Linear Settings → API](https://linear.app/settings/api) → Create new API key                                    |
+| `NOTION_TOKEN`          | Notion integration token        | [Notion Integrations](https://www.notion.so/my-integrations) → New integration → Copy Internal Integration Token |
+| `NOTION_DATABASE_ID`    | Target Notion database ID       | Open Notion database → Share → Copy link → Extract ID from URL                                                   |
+| `LINEAR_WEBHOOK_SECRET` | Secret for webhook verification | Generate using: `openssl rand -hex 32`                                                                           |
 
 **Example**: Setting up `LINEAR_API_KEY`
+
 ```bash
 # 1. Navigate to Linear Settings → API
 # 2. Click "Create new API key"
@@ -137,6 +150,7 @@ Add the following secrets to your GitHub repository:
 #### Step 2: Create Notion Integration
 
 1. **Create Integration**:
+
    ```
    Navigate to: https://www.notion.so/my-integrations
    Click: "New integration"
@@ -146,6 +160,7 @@ Add the following secrets to your GitHub repository:
    ```
 
 2. **Connect to Database**:
+
    ```
    Open your Notion database
    Click "..." menu → Add connections
@@ -153,8 +168,8 @@ Add the following secrets to your GitHub repository:
    Click "Connect"
    ```
 
-3. **Configure Database Properties**:
-   Ensure your Notion database has these properties:
+3. **Configure Database Properties**: Ensure your Notion database has
+   these properties:
    - `Title` (title) - Issue title
    - `Status` (select) - Issue status
    - `Linear ID` (text) - Linear issue identifier
@@ -183,7 +198,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -222,6 +237,7 @@ jobs:
 #### Setting up Linear Webhook
 
 1. **Access Linear Webhook Settings**:
+
    ```
    Navigate to: Linear workspace → Settings → API → Webhooks
    URL: https://linear.app/[workspace]/settings/api/webhooks
@@ -240,6 +256,7 @@ jobs:
      - ☑️ Comment created
 
 3. **Webhook Payload Structure**:
+
    ```json
    {
      "action": "create" | "update" | "remove",
@@ -279,41 +296,47 @@ jobs:
 
 #### GitHub Repository Dispatch Setup
 
-To receive webhooks, you need to set up a webhook forwarding service or use GitHub's repository dispatch API:
+To receive webhooks, you need to set up a webhook forwarding service
+or use GitHub's repository dispatch API:
 
 **Option 1: Using webhook-relay or similar service**
+
 ```bash
 # Deploy a simple webhook forwarder
 # This forwards Linear webhooks to GitHub repository dispatch
 ```
 
 **Option 2: Direct API Integration**
+
 ```javascript
 // In your webhook handler
 const response = await fetch(
-  `https://api.github.com/repos/${owner}/${repo}/dispatches`,
-  {
-    method: 'POST',
-    headers: {
-      'Authorization': `token ${GITHUB_TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      event_type: 'linear_webhook',
-      client_payload: linearWebhookPayload
-    })
-  }
+	`https://api.github.com/repos/${owner}/${repo}/dispatches`,
+	{
+		method: 'POST',
+		headers: {
+			Authorization: `token ${GITHUB_TOKEN}`,
+			Accept: 'application/vnd.github.v3+json',
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			event_type: 'linear_webhook',
+			client_payload: linearWebhookPayload,
+		}),
+	},
 );
 ```
 
 ### MCP Integration Notes
 
-The Model Context Protocol (MCP) integration provides AI-powered context and automation for the Linear↔Notion sync workflow.
+The Model Context Protocol (MCP) integration provides AI-powered
+context and automation for the Linear↔Notion sync workflow.
 
 #### What is MCP?
 
-Model Context Protocol is a standardized way for AI models to access external context and tools. In this workflow, MCP:
+Model Context Protocol is a standardized way for AI models to access
+external context and tools. In this workflow, MCP:
+
 - Provides semantic understanding of issue content
 - Suggests optimal Notion database mappings
 - Maintains sync state across platforms
@@ -326,20 +349,22 @@ Model Context Protocol is a standardized way for AI models to access external co
 The CLD Omnisearch MCP server can be integrated into the workflow to:
 
 1. **Parse and Enhance Issue Content**:
+
    ```javascript
    // Use MCP to enhance issue descriptions
    const enhancedDescription = await mcpServer.enhance({
-     content: linearIssue.description,
-     context: 'technical-documentation'
+   	content: linearIssue.description,
+   	context: 'technical-documentation',
    });
    ```
 
 2. **Smart Field Mapping**:
+
    ```javascript
    // Use MCP to intelligently map Linear fields to Notion
    const notionFields = await mcpServer.mapFields({
-     source: linearIssue,
-     targetSchema: notionDatabaseSchema
+   	source: linearIssue,
+   	targetSchema: notionDatabaseSchema,
    });
    ```
 
@@ -347,9 +372,9 @@ The CLD Omnisearch MCP server can be integrated into the workflow to:
    ```javascript
    // Use MCP to resolve conflicts when both systems updated
    const resolution = await mcpServer.resolveConflict({
-     linearVersion: linearIssue,
-     notionVersion: notionPage,
-     strategy: 'latest-wins'
+   	linearVersion: linearIssue,
+   	notionVersion: notionPage,
+   	strategy: 'latest-wins',
    });
    ```
 
@@ -391,16 +416,22 @@ BRAVE_API_KEY=your-brave-key
 ##### 1. Webhook Not Triggering Workflow
 
 **Symptoms**:
+
 - Linear webhook shows successful delivery
 - GitHub Actions workflow doesn't run
 
 **Solutions**:
-- ✅ Verify webhook URL is correct: `https://api.github.com/repos/[owner]/[repo]/dispatches`
-- ✅ Check GitHub token permissions (needs `repo` scope for private repos)
-- ✅ Ensure event type matches: `linear_webhook` in both webhook and workflow
+
+- ✅ Verify webhook URL is correct:
+  `https://api.github.com/repos/[owner]/[repo]/dispatches`
+- ✅ Check GitHub token permissions (needs `repo` scope for private
+  repos)
+- ✅ Ensure event type matches: `linear_webhook` in both webhook and
+  workflow
 - ✅ Check Actions tab for any error messages
 
 **Debug Steps**:
+
 ```bash
 # Test webhook manually
 curl -X POST \
@@ -413,16 +444,19 @@ curl -X POST \
 ##### 2. Notion API Authentication Fails
 
 **Symptoms**:
+
 - Error: "Unauthorized" or "Invalid token"
 - Workflow fails at Notion sync step
 
 **Solutions**:
+
 - ✅ Regenerate Notion integration token
 - ✅ Verify integration has access to target database
 - ✅ Check database ID is correct (extract from database URL)
 - ✅ Ensure token is properly set in GitHub Secrets
 
 **Verification**:
+
 ```bash
 # Test Notion API access
 curl -X GET \
@@ -434,49 +468,63 @@ curl -X GET \
 ##### 3. Field Mapping Issues
 
 **Symptoms**:
+
 - Sync completes but data missing in Notion
 - Type mismatch errors
 
 **Solutions**:
+
 - ✅ Verify Notion database properties match expected types
 - ✅ Check property names are exact matches (case-sensitive)
 - ✅ Ensure multi-select options exist in Notion before syncing
 - ✅ Validate date formats match Notion's requirements
 
 **Database Schema Validation**:
+
 ```javascript
 // Validate before sync
 const requiredProperties = [
-  'Title', 'Status', 'Linear ID', 'Assignee',
-  'Priority', 'Labels', 'Created', 'Updated'
+	'Title',
+	'Status',
+	'Linear ID',
+	'Assignee',
+	'Priority',
+	'Labels',
+	'Created',
+	'Updated',
 ];
 
 const databaseSchema = await notion.databases.retrieve({
-  database_id: NOTION_DATABASE_ID
+	database_id: NOTION_DATABASE_ID,
 });
 
 const missingProperties = requiredProperties.filter(
-  prop => !databaseSchema.properties[prop]
+	(prop) => !databaseSchema.properties[prop],
 );
 
 if (missingProperties.length > 0) {
-  throw new Error(`Missing properties: ${missingProperties.join(', ')}`);
+	throw new Error(
+		`Missing properties: ${missingProperties.join(', ')}`,
+	);
 }
 ```
 
 ##### 4. MCP Server Connection Issues
 
 **Symptoms**:
+
 - Workflow times out waiting for MCP
 - MCP-enhanced features not working
 
 **Solutions**:
+
 - ✅ Increase server startup wait time
 - ✅ Check MCP server logs for startup errors
 - ✅ Verify API keys for search providers are valid
 - ✅ Ensure Node.js version is compatible (v18+)
 
 **Debug MCP**:
+
 ```bash
 # Run MCP server with verbose logging
 DEBUG=* npx -y cld-omnisearch
@@ -488,16 +536,19 @@ curl http://localhost:3000/health
 ##### 5. Rate Limiting
 
 **Symptoms**:
+
 - 429 Too Many Requests errors
 - Intermittent sync failures
 
 **Solutions**:
+
 - ✅ Implement exponential backoff
 - ✅ Add rate limiting to webhook handler
 - ✅ Use workflow concurrency limits
 - ✅ Cache Notion database schema
 
 **Workflow Configuration**:
+
 ```yaml
 concurrency:
   group: linear-notion-sync
@@ -507,26 +558,29 @@ concurrency:
 ##### 6. Webhook Signature Verification Fails
 
 **Symptoms**:
+
 - Webhook rejected with "Invalid signature"
 - Security errors in logs
 
 **Solutions**:
+
 - ✅ Verify webhook secret matches in Linear and GitHub
 - ✅ Check signature computation algorithm
 - ✅ Ensure timestamp is within acceptable window
 - ✅ Validate payload hasn't been modified
 
 **Verification Code**:
+
 ```javascript
 const crypto = require('crypto');
 
 function verifyWebhookSignature(payload, signature, secret) {
-  const hmac = crypto.createHmac('sha256', secret);
-  const expectedSignature = hmac.update(payload).digest('hex');
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+	const hmac = crypto.createHmac('sha256', secret);
+	const expectedSignature = hmac.update(payload).digest('hex');
+	return crypto.timingSafeEqual(
+		Buffer.from(signature),
+		Buffer.from(expectedSignature),
+	);
 }
 ```
 
@@ -545,39 +599,50 @@ function verifyWebhookSignature(payload, signature, secret) {
 
 ## Setup Wizard Pattern
 
-The CLD Omnisearch repository follows a setup wizard pattern for configurations, making it easy to get started with complex integrations.
+The CLD Omnisearch repository follows a setup wizard pattern for
+configurations, making it easy to get started with complex
+integrations.
 
 ### Pattern Overview
 
 The setup wizard pattern consists of:
 
-1. **Prerequisites Documentation**: Clear list of required tools and accounts
-2. **Step-by-Step Instructions**: Sequential setup guide with verification steps
-3. **Configuration Templates**: Pre-made JSON configs in `msty-configs/` directory
-4. **Environment Variables**: Flexible configuration through environment variables
+1. **Prerequisites Documentation**: Clear list of required tools and
+   accounts
+2. **Step-by-Step Instructions**: Sequential setup guide with
+   verification steps
+3. **Configuration Templates**: Pre-made JSON configs in
+   `msty-configs/` directory
+4. **Environment Variables**: Flexible configuration through
+   environment variables
 5. **Quick Start Guide**: Minimal steps to get running quickly
 6. **Detailed Setup**: Comprehensive guide for advanced configurations
 
 ### Example: Msty Studio Setup
 
-The repository's Msty Studio setup (see `MSTY_SETUP.md`) exemplifies this pattern:
+The repository's Msty Studio setup (see `MSTY_SETUP.md`) exemplifies
+this pattern:
 
 ```markdown
 ## Prerequisites
+
 - Node.js v18+
 - NPX
 - Msty Studio
 
 ## Quick Start
+
 1. Run: npx -y cld-omnisearch
 2. Configure in Msty Studio
 3. Set API keys
 4. Start using
 
 ## Detailed Setup
+
 [Step-by-step instructions with screenshots]
 
 ## Troubleshooting
+
 [Common issues and solutions]
 ```
 
@@ -591,6 +656,7 @@ The Linear↔Notion workflow documentation follows this same pattern:
 4. **Troubleshooting** → Common issues with solutions
 
 This consistent pattern ensures:
+
 - ✅ New users can get started quickly
 - ✅ Advanced users have detailed documentation
 - ✅ Troubleshooting is straightforward
@@ -652,6 +718,7 @@ This consistent pattern ensures:
 ### Monitoring
 
 1. **Workflow Notifications**:
+
    ```yaml
    - name: Notify on Failure
      if: failure()
@@ -687,6 +754,7 @@ This consistent pattern ensures:
 ## Contributing
 
 Found an issue with this documentation? Please:
+
 1. Open an issue in the repository
 2. Reference this wiki page ID: `8e92766d04964f54bc3bef5c30e1ad4b`
 3. Include suggested improvements
@@ -694,9 +762,11 @@ Found an issue with this documentation? Please:
 
 ## License
 
-This documentation is part of the CLD Omnisearch project and follows the same license.
+This documentation is part of the CLD Omnisearch project and follows
+the same license.
 
 ---
 
-*Last Updated: 2026-02-04*  
-*Related Issue*: [MCP-2: Document Linear Refactor workflow in GitHub Actions Wiki](https://linear.app/parallax-workspace/issue/MCP-2/)
+_Last Updated: 2026-02-04_  
+_Related Issue_:
+[MCP-2: Document Linear Refactor workflow in GitHub Actions Wiki](https://linear.app/parallax-workspace/issue/MCP-2/)
