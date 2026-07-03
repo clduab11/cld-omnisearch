@@ -115,9 +115,10 @@ export const config = {
 		},
 		firecrawl_extract: {
 			api_key: FIRECRAWL_API_KEY,
+			// Firecrawl deprecated /v1/extract; use the current /v2/extract endpoint
 			base_url: FIRECRAWL_BASE_URL
-				? `${FIRECRAWL_BASE_URL}/v1/extract`
-				: 'https://api.firecrawl.dev/v1/extract',
+				? `${FIRECRAWL_BASE_URL}/v2/extract`
+				: 'https://api.firecrawl.dev/v2/extract',
 			timeout: 60000, // 60 seconds
 		},
 		firecrawl_actions: {
@@ -174,7 +175,7 @@ export const validate_config = () => {
 	else available_keys.push('PERPLEXITY_API_KEY');
 
 	if (!JINA_AI_API_KEY) missing_keys.push('JINA_AI_API_KEY');
-	else available_keys.push('JINA_AI_KEY');
+	else available_keys.push('JINA_AI_API_KEY');
 
 	if (!FIRECRAWL_API_KEY) missing_keys.push('FIRECRAWL_API_KEY');
 	else available_keys.push('FIRECRAWL_API_KEY');

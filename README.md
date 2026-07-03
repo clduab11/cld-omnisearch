@@ -1,11 +1,25 @@
 # CLD Omnisearch
 
-A Model Context Protocol (MCP) server that provides unified access to
-multiple search providers and AI tools, **optimized for Msty Studio**.
-This server combines the capabilities of Tavily, Perplexity, Kagi,
-Jina AI, Brave, Exa AI, and Firecrawl to offer comprehensive search,
-AI responses, content processing, and enhancement features through a
-single interface.
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/cld-omnisearch.svg)](https://www.npmjs.com/package/cld-omnisearch)
+[![MCP](https://img.shields.io/badge/MCP-Server-purple.svg)](https://modelcontextprotocol.io)
+
+**One MCP server, eight best-in-class providers, zero integration
+headaches.**
+
+CLD Omnisearch is a Model Context Protocol (MCP) server that gives any
+MCP-compatible AI client — Claude, Msty Studio, Cline, and more — a
+single, unified interface to the web. Instead of wiring up separate
+integrations for every search or content API, connect one server and
+get search, AI-generated answers, content extraction, and fact
+verification across **Tavily, Brave, Kagi, Exa, Perplexity, Jina AI,
+Firecrawl, and GitHub**.
+
+Built on top of the original
+[`mcp-omnisearch`](https://github.com/spences10/mcp-omnisearch) by
+[Scott Spence](https://github.com/spences10), and enhanced with
+first-class [Msty Studio](https://msty.ai/) support, dual environment
+variable handling, and hardened provider integrations.
 
 ## 🎯 Msty Studio Ready
 
@@ -139,9 +153,10 @@ and parameters:
 ### 🤖 AI Response Tools
 
 - **Perplexity AI**: Advanced response generation combining real-time
-  web search with GPT-4 Omni and Claude 3
-- **Kagi FastGPT**: Quick AI-generated answers with citations (900ms
-  typical response time)
+  web search with Perplexity's Sonar models for reasoning and
+  synthesis across sources
+- **Kagi FastGPT**: Fast, citation-backed AI-generated answers powered
+  by Kagi's search index
 - **Exa Answer**: Get direct AI-generated answers to questions using
   Exa Answer API
 
@@ -378,8 +393,9 @@ token with **public repository access only** for security:
 - This token configuration ensures no access to private repositories
 - Only public code search, repository discovery, and user profiles are
   accessible
-- Rate limits: 5,000 requests/hour for code search, 10 requests/minute
-  for code search specifically
+- Rate limits: 5,000 requests/hour overall for authenticated requests,
+  with a stricter limit of 10 requests/minute specifically for the
+  code search endpoint
 - You can revoke the token anytime from GitHub settings if needed
 
 ### Self-Hosted Firecrawl Configuration
@@ -407,8 +423,8 @@ FIRECRAWL_BASE_URL=https://your-firecrawl-domain.com
 
 - If `FIRECRAWL_BASE_URL` is not set, MCP Omnisearch will default to
   the Firecrawl cloud service
-- Self-hosted instances support the same API endpoints (`/v1/scrape`,
-  `/v1/crawl`, etc.)
+- Self-hosted instances support the same API endpoints used here
+  (`/v1/scrape`, `/v1/crawl`, `/v1/map`, and `/v2/extract`)
 - You'll still need a `FIRECRAWL_API_KEY` even for self-hosted
   instances
 - Self-hosted Firecrawl provides enhanced security and customization
@@ -1148,7 +1164,14 @@ guidelines.
 
 ## License
 
-MIT License - see the [LICENSE](LICENSE) file for details.
+Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+This project began as a fork of
+[`mcp-omnisearch`](https://github.com/spences10/mcp-omnisearch) by
+Scott Spence, originally released under the MIT License. In accordance
+with the MIT License's sublicensing terms, the original license and
+copyright notice are preserved in the [NOTICE](NOTICE) file. All code
+added since the fork is licensed under Apache 2.0.
 
 ---
 
