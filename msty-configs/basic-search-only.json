@@ -5,8 +5,8 @@
     "cld-omnisearch"
   ],
   "env": {
-    "TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily Search API Key:}",
-    "BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API Key:}",
-    "KAGI_API_KEY": "{KAGI_API_KEY:Kagi Search API Key:}"
+    "MSTY_TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily Search API Key:}",
+    "MSTY_BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API Key:}",
+    "MSTY_KAGI_API_KEY": "{KAGI_API_KEY:Kagi Search API Key:}"
   }
 }

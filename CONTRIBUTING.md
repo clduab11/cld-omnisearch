@@ -2,15 +2,69 @@
 
 Thanks for your interest in contributing to mcp-omnisearch. The goal
 of this project is to provide a clear, reliable set of MCP tools with
-code that’s easy to reason about and safe to extend.
+code that's easy to reason about and safe to extend.
+
+## Code of Conduct
+
+We are committed to providing a welcoming and inclusive environment. By participating in this project, you agree to:
+
+- Be respectful and constructive in all interactions
+- Welcome newcomers and answer questions patiently
+- Accept criticism gracefully and give credit where due
+- Focus on what's best for the community and project
+- Show empathy towards other contributors
+
+See our full Code of Conduct for detailed guidelines.
+
+## Development Setup
+
+**Prerequisites:**
+- Node.js 22+ (ESM)
+- pnpm package manager
+- TypeScript 5.9+ (ES2022 target)
+
+**Installation:**
+```bash
+pnpm install
+```
+
+**Environment Configuration:**
+- Copy `.env.example` to `.env` and configure required API keys
+- API keys are read through `src/config/env.ts`
+- Providers remain opt-in; missing keys prevent tool registration
+
+**Available Scripts:**
+- `pnpm run build` - Compile TypeScript
+- `pnpm run format` - Format code with Prettier
+- `pnpm run format:check` - Check formatting without changes
+- `pnpm run lint` - Run ESLint
+- `pnpm run type-check` - TypeScript type checking
+- `pnpm run test` - Run tests with Vitest
+- Coverage: `pnpm run test -- --coverage`
+
+## Testing Requirements
+
+- All new features require unit tests colocated with source (`*.test.ts`)
+- Use Vitest globals (`describe`, `it`, `expect`, `vi`)
+- Mock external APIs and HTTP calls
+- Minimum 80% code coverage required
+- Run `pnpm run test -- --coverage` to verify coverage before submitting
+
+## Commit Guidelines
+
+- Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`
+- Run `pnpm run type-check` before committing
+- Run `pnpm run lint` to fix linting issues
+- Run `pnpm run test` to verify all tests pass
+- Add changeset for user-facing changes: `pnpm changeset`
 
 ## Core Principles
 
-- Small, focused PRs: Prefer a narrow, self‑contained change over a
+- Small, focused PRs: Prefer a narrow, self-contained change over a
   broad refactor. One good PR with a clear explanation is far more
   likely to be reviewed and merged quickly than many large PRs opened
   at once.
-- Explain the “why”: In your PR description, include the problem, the
+- Explain the "why": In your PR description, include the problem, the
   approach, and how you verified it. Short screen recordings or gifs
   are very welcome.
 - Build trust incrementally: Start with a small change; once merged,
@@ -20,8 +74,8 @@ code that’s easy to reason about and safe to extend.
 ## PR Expectations (What To Include)
 
 - Summary: 1–3 sentences describing the change and motivation.
-- Scope: What files/areas are touched and why they’re needed (no
-  drive‑by changes).
+- Scope: What files/areas are touched and why they're needed (no
+  drive-by changes).
 - Verification: How you tested locally (commands and expected
   outputs). If applicable, example MCP tool calls and sample results.
 - Impact: Any breaking changes, provider/API key requirements, or
@@ -40,9 +94,9 @@ code that’s easy to reason about and safe to extend.
 - **Auth and configuration**
   - Read API keys from `src/config/env.ts` and validate with
     `validate_api_key(...)`.
-  - Do not hard‑code keys or base URLs; use the `config` object seen
+  - Do not hard-code keys or base URLs; use the `config` object seen
     in the codebase.
-  - Providers must remain opt‑in: if a key is missing, the provider’s
+  - Providers must remain opt-in: if a key is missing, the provider's
     tools must not be registered (see `initialize_providers()`).
 - **Retries**
   - Use `retry_with_backoff(...)` for provider calls that can
@@ -53,15 +107,15 @@ code that’s easy to reason about and safe to extend.
   - TypeScript, ESM modules, no new lint rules or formatters.
 - **Scope discipline**
   - Keep unrelated changes out of your PR. If you spot issues, open a
-    separate issue or a follow‑up PR.
+    separate issue or a follow-up PR.
 
 ## Provider Authoring Guide (Short)
 
 - Use `http_json` for requests and JSON parsing.
 - Use the appropriate auth header per provider (e.g.,
-  `Authorization: Bearer`, `Authorization: Bot`, or vendor‑specific
+  `Authorization: Bearer`, `Authorization: Bot`, or vendor-specific
   tokens). Several existing providers are good references.
-- Timeouts come from `config`; do not hard‑code.
+- Timeouts come from `config`; do not hard-code.
 - Return the minimal, structured shape expected by our common types
   (search, processing, enhancement).
 
@@ -70,6 +124,8 @@ code that’s easy to reason about and safe to extend.
 - Install deps: `pnpm install`
 - Build: `pnpm run build`
 - Format: `pnpm run format` (or `pnpm run format:check`)
+- Type check: `pnpm run type-check`
+- Test: `pnpm run test -- --coverage`
 - Optional: run via MCP Inspector for basic tool listing and
   invocations: `npx @modelcontextprotocol/inspector dist/index.js`
 
@@ -87,7 +143,7 @@ code that’s easy to reason about and safe to extend.
 
 ## What Gets PRs Merged Faster
 
-- A focused diff that’s easy to review.
+- A focused diff that's easy to review.
 - Clear rationale and validation steps in the PR description (bonus: a
   short video/gif).
 - Adherence to project conventions (http_json, timeouts, config,
@@ -99,11 +155,5 @@ code that’s easy to reason about and safe to extend.
   changes.
 - Introducing shared input schemas for tools that force providers into
   awkward shapes.
-- Large, multi‑area refactors combined with feature changes in a
+- Large, multi-area refactors combined with feature changes in a
   single PR.
-
-## Code of Conduct
-
-- Be respectful and collaborative. Thoughtful discussion and small,
-  well‑explained changes build trust and move the project forward
-  quickly.

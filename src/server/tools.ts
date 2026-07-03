@@ -4,11 +4,13 @@ import * as v from 'valibot';
 import {
 	EnhancementProvider,
 	ProcessingProvider,
-	SearchProvider,
 } from '../common/types.js';
 import { create_error_response } from '../common/utils.js';
+import type { UnifiedAISearchProvider } from '../providers/unified/ai_search.js';
 import type { UnifiedExaProcessingProvider } from '../providers/unified/exa_process.js';
 import type { UnifiedFirecrawlProcessingProvider } from '../providers/unified/firecrawl_process.js';
+import type { UnifiedGitHubSearchProvider } from '../providers/unified/github_search.js';
+import type { UnifiedWebSearchProvider } from '../providers/unified/web_search.js';
 
 // Track available providers by category
 export const available_providers = {
@@ -19,9 +21,9 @@ export const available_providers = {
 };
 
 class ToolRegistry {
-	private web_search_provider?: SearchProvider;
-	private github_search_provider?: SearchProvider;
-	private ai_search_provider?: SearchProvider;
+	private web_search_provider?: UnifiedWebSearchProvider;
+	private github_search_provider?: UnifiedGitHubSearchProvider;
+	private ai_search_provider?: UnifiedAISearchProvider;
 	private firecrawl_process_provider?: UnifiedFirecrawlProcessingProvider;
 	private exa_process_provider?: UnifiedExaProcessingProvider;
 	private processing_providers: Map<string, ProcessingProvider> =
@@ -29,17 +31,17 @@ class ToolRegistry {
 	private enhancement_providers: Map<string, EnhancementProvider> =
 		new Map();
 
-	register_web_search_provider(provider: SearchProvider) {
+	register_web_search_provider(provider: UnifiedWebSearchProvider) {
 		this.web_search_provider = provider;
 		available_providers.search.add(provider.name);
 	}
 
-	register_github_search_provider(provider: SearchProvider) {
+	register_github_search_provider(provider: UnifiedGitHubSearchProvider) {
 		this.github_search_provider = provider;
 		available_providers.search.add(provider.name);
 	}
 
-	register_ai_search_provider(provider: SearchProvider) {
+	register_ai_search_provider(provider: UnifiedAISearchProvider) {
 		this.ai_search_provider = provider;
 		available_providers.ai_response.add(provider.name);
 	}
@@ -117,7 +119,7 @@ class ToolRegistry {
 							limit,
 							include_domains,
 							exclude_domains,
-						} as any);
+						});
 						return {
 							content: [
 								{
@@ -179,14 +181,12 @@ class ToolRegistry {
 				},
 				async ({ query, search_type, limit, sort }) => {
 					try {
-						const results = await this.github_search_provider!.search(
-							{
-								query,
-								search_type,
-								limit,
-								sort,
-							} as any,
-						);
+						const results = await this.github_search_provider!.search({
+							query,
+							search_type,
+							limit,
+							sort,
+						});
 						return {
 							content: [
 								{
@@ -240,7 +240,7 @@ class ToolRegistry {
 							query,
 							provider,
 							limit,
-						} as any);
+						});
 						return {
 							content: [
 								{
@@ -302,7 +302,7 @@ class ToolRegistry {
 							await this.firecrawl_process_provider!.process_content(
 								url,
 								extract_depth,
-								mode as any,
+								mode,
 							);
 						return {
 							content: [
@@ -359,7 +359,7 @@ class ToolRegistry {
 							await this.exa_process_provider!.process_content(
 								url,
 								extract_depth,
-								mode as any,
+								mode,
 							);
 						return {
 							content: [
@@ -488,19 +488,19 @@ export const register_tools = (server: McpServer<GenericSchema>) => {
 
 // Export methods to register providers
 export const register_web_search_provider = (
-	provider: SearchProvider,
+	provider: UnifiedWebSearchProvider,
 ) => {
 	registry.register_web_search_provider(provider);
 };
 
 export const register_github_search_provider = (
-	provider: SearchProvider,
+	provider: UnifiedGitHubSearchProvider,
 ) => {
 	registry.register_github_search_provider(provider);
 };
 
 export const register_ai_search_provider = (
-	provider: SearchProvider,
+	provider: UnifiedAISearchProvider,
 ) => {
 	registry.register_ai_search_provider(provider);
 };

@@ -20,8 +20,14 @@
 		"dev": "npx @modelcontextprotocol/inspector dist/index.js",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
+		"prepare": "husky",
+		"lint": "eslint . --max-warnings 0",
+		"lint:fix": "eslint . --fix",
+		"type-check": "tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"changeset": "changeset",
-		"version": "changeset version",
+		"changeset version": "changeset version",
 		"release": "pnpm run build && changeset publish",
 		"sync-server-json": "node -e \"const pkg = require('./package.json'); const server = require('./server.json'); server.version = pkg.version; server.packages[0].version = pkg.version; require('fs').writeFileSync('./server.json', JSON.stringify(server, null, 2));\"",
 		"publish-mcp": "pnpm run sync-server-json && mcp-publisher publish"
@@ -57,9 +63,24 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@changesets/cli": "^2.29.7",
+		"@eslint/js": "^9.0.0",
 		"@types/node": "^24.7.2",
+		"@typescript-eslint/eslint-plugin": "^8.0.0",
+		"@typescript-eslint/parser": "^8.0.0",
+		"@vitest/coverage-c8": "^3.0.0",
+		"@vitest/coverage-v8": "^3.0.0",
+		"eslint": "^9.0.0",
+		"globals": "^15.0.0",
+		"husky": "^9.0.0",
+		"lint-staged": "^15.0.0",
 		"prettier": "^3.6.2",
-		"typescript": "^5.9.3"
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.0.0",
+		"vitest": "^3.0.0"
+	},
+	"lint-staged": {
+		"*.{js,ts,json,md}": ["prettier --write"],
+		"*.{ts,js}": ["eslint --fix"]
 	},
 	"dependencies": {
 		"@tmcp/adapter-valibot": "^0.1.4",
