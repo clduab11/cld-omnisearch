@@ -1,7 +1,9 @@
 import { JinaGroundingProvider } from './enhancement/jina_grounding/index.js';
 import { KagiEnrichmentProvider } from './enhancement/kagi_enrichment/index.js';
 import { KagiSummarizerProvider } from './processing/kagi_summarizer/index.js';
+import { TavilyCrawlProvider } from './processing/tavily_crawl/index.js';
 import { TavilyExtractProvider } from './processing/tavily_extract/index.js';
+import { TavilyMapProvider } from './processing/tavily_map/index.js';
 import { UnifiedAISearchProvider } from './unified/ai_search.js';
 import { UnifiedExaProcessProvider } from './unified/exa_process.js';
 import { UnifiedFirecrawlProvider } from './unified/firecrawl_process.js';
@@ -120,6 +122,24 @@ export const initialize_providers = () => {
 		)
 	) {
 		register_processing_provider(new TavilyExtractProvider());
+	}
+
+	if (
+		is_api_key_valid(
+			config.processing.tavily_crawl.api_key,
+			'tavily_crawl',
+		)
+	) {
+		register_processing_provider(new TavilyCrawlProvider());
+	}
+
+	if (
+		is_api_key_valid(
+			config.processing.tavily_map.api_key,
+			'tavily_map',
+		)
+	) {
+		register_processing_provider(new TavilyMapProvider());
 	}
 
 	// Initialize enhancement providers

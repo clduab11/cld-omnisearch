@@ -15,17 +15,28 @@ import {
 } from '../../../common/utils.js';
 import { config } from '../../../config/env.js';
 
+// Kagi's v1 Search API (POST /search, Bearer auth) replaced the old v0
+// "Bot"-authenticated GET endpoint. Results are now namespaced by result
+// type under `data.search[]`, `data.news[]`, etc. See:
+// https://kagi.com/api/docs/openapi
 interface KagiSearchResponse {
-	data: Array<{
-		title: string;
-		url: string;
-		snippet: string;
-		rank?: number;
-	}>;
 	meta?: {
-		total_hits: number;
-		api_balance?: number;
+		trace?: string;
+		node?: string;
+		ms?: number;
 	};
+	data?: {
+		search?: Array<{
+			url: string;
+			title: string;
+			snippet?: string;
+			time?: string;
+		}>;
+	};
+	error?: Array<{
+		code: string;
+		message?: string;
+	}>;
 }
 
 export class KagiSearchProvider implements SearchProvider {
@@ -46,10 +57,6 @@ export class KagiSearchProvider implements SearchProvider {
 		const search_request = async () => {
 			try {
 				let query = sanitize_query(search_params.query);
-				const query_params = new URLSearchParams({
-					q: query,
-					limit: (params.limit ?? 10).toString(),
-				});
 
 				// Handle domain filters using query string operators
 				const include_domains = [
@@ -73,58 +80,32 @@ export class KagiSearchProvider implements SearchProvider {
 						.join(' ')}`;
 				}
 
-				// Update query parameter with domain filters
-				query_params.set('q', query);
-
 				// Add file type filter
 				if (search_params.file_type) {
-					query_params.append('file_type', search_params.file_type);
-				}
-
-				// Add time range filters
-				if (search_params.date_before || search_params.date_after) {
-					const time_range: string[] = [];
-					if (search_params.date_after) {
-						time_range.push(`after:${search_params.date_after}`);
-					}
-					if (search_params.date_before) {
-						time_range.push(`before:${search_params.date_before}`);
-					}
-					query_params.append('time_range', time_range.join(','));
+					query += ` filetype:${search_params.file_type}`;
 				}
 
 				// Add title and URL filters to the query
 				if (search_params.title_filter) {
 					query += ` intitle:${search_params.title_filter}`;
-					query_params.set('q', query);
 				}
 				if (search_params.url_filter) {
 					query += ` inurl:${search_params.url_filter}`;
-					query_params.set('q', query);
 				}
 
 				// Add body filter
 				if (search_params.body_filter) {
 					query += ` inbody:${search_params.body_filter}`;
-					query_params.set('q', query);
 				}
 
 				// Add page filter
 				if (search_params.page_filter) {
 					query += ` inpage:${search_params.page_filter}`;
-					query_params.set('q', query);
 				}
 
 				// Add language filter
 				if (search_params.language) {
 					query += ` lang:${search_params.language}`;
-					query_params.set('q', query);
-				}
-
-				// Add location filter
-				if (search_params.location) {
-					query += ` loc:${search_params.location}`;
-					query_params.set('q', query);
 				}
 
 				// Add exact phrases
@@ -132,7 +113,6 @@ export class KagiSearchProvider implements SearchProvider {
 					query += ` ${search_params.exact_phrases
 						.map((phrase) => `"${phrase}"`)
 						.join(' ')}`;
-					query_params.set('q', query);
 				}
 
 				// Add force include terms
@@ -140,7 +120,6 @@ export class KagiSearchProvider implements SearchProvider {
 					query += ` ${search_params.force_include_terms
 						.map((term) => `+${term}`)
 						.join(' ')}`;
-					query_params.set('q', query);
 				}
 
 				// Add exclude terms
@@ -148,29 +127,58 @@ export class KagiSearchProvider implements SearchProvider {
 					query += ` ${search_params.exclude_terms
 						.map((term) => `-${term}`)
 						.join(' ')}`;
-					query_params.set('q', query);
 				}
 
-				const data = await http_json<
-					KagiSearchResponse & { message?: string }
-				>(
+				// The v1 API exposes date range and region as structured
+				// filters rather than inline query operators.
+				const filters: Record<string, string> = {};
+				if (search_params.date_after) {
+					filters.after = search_params.date_after;
+				}
+				if (search_params.date_before) {
+					filters.before = search_params.date_before;
+				}
+				if (search_params.location) {
+					filters.region = search_params.location;
+				}
+
+				const request_body: Record<string, unknown> = {
+					query: query.trim(),
+					limit: params.limit ?? 10,
+				};
+				if (Object.keys(filters).length > 0) {
+					request_body.filters = filters;
+				}
+
+				const data = await http_json<KagiSearchResponse>(
 					this.name,
-					`${config.search.kagi.base_url}/search?${query_params}`,
+					`${config.search.kagi.base_url}/search`,
 					{
-						method: 'GET',
+						method: 'POST',
 						headers: {
-							Authorization: `Bot ${api_key}`,
+							Authorization: `Bearer ${api_key}`,
+							'Content-Type': 'application/json',
 							Accept: 'application/json',
 						},
+						body: JSON.stringify(request_body),
 						signal: AbortSignal.timeout(config.search.kagi.timeout),
 					},
 				);
 
-				return (data.data || []).map((result) => ({
+				if (data.error && data.error.length > 0) {
+					throw new ProviderError(
+						ErrorType.API_ERROR,
+						`Kagi search error: ${
+							data.error[0].message || data.error[0].code
+						}`,
+						this.name,
+					);
+				}
+
+				return (data.data?.search || []).map((result) => ({
 					title: result.title,
 					url: result.url,
-					snippet: result.snippet,
-					score: result.rank,
+					snippet: result.snippet || '',
 					source_provider: this.name,
 				}));
 			} catch (error) {

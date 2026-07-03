@@ -170,6 +170,12 @@ and parameters:
   pages with configurable extraction depth ('basic' or 'advanced').
   Returns both combined content and individual URL content, with
   metadata including word count and extraction statistics
+- **Tavily Crawl**: Graph-based website crawling that follows internal
+  links from a starting URL in parallel, with built-in content
+  extraction. Best for ingesting entire documentation sites or domains
+- **Tavily Map**: Fast site mapping that discovers URLs from a
+  starting point without extracting page content. Useful for auditing
+  a site or scoping a follow-up crawl/extract call
 - **Firecrawl Scrape**: Extract clean, LLM-ready data from single URLs
   with enhanced formatting options
 - **Firecrawl Crawl**: Deep crawling of all accessible subpages on a
@@ -345,7 +351,7 @@ The server uses API keys for each provider. **You don't need keys for
 all providers** - only the providers corresponding to your available
 API keys will be activated:
 
-- `TAVILY_API_KEY`: For Tavily Search
+- `TAVILY_API_KEY`: For Tavily Search, Extract, Crawl, and Map
 - `PERPLEXITY_API_KEY`: For Perplexity AI
 - `KAGI_API_KEY`: For Kagi services (FastGPT, Summarizer, Enrichment)
 - `JINA_AI_API_KEY`: For Jina AI services (Reader, Grounding)
@@ -707,6 +713,61 @@ Response includes:
 - Metadata with word count, successful extractions, and any failed
   URLs
 
+#### tavily_crawl_process
+
+Graph-based website crawl with Tavily Crawl, following internal links
+from a starting URL and extracting content along the way.
+
+Parameters:
+
+- `url` (string | string[], required): Starting URL for the crawl
+  (only the first URL is used)
+- `extract_depth` (string, optional): Extraction depth - 'basic'
+  (default: depth 1, up to 20 pages) or 'advanced' (depth 3, up to 50
+  pages)
+
+Example:
+
+```json
+{
+	"url": "https://docs.tavily.com",
+	"extract_depth": "advanced"
+}
+```
+
+Response includes:
+
+- Combined content from all crawled pages
+- Individual content for each page
+- Metadata including word count and crawl statistics
+
+#### tavily_map_process
+
+Fast site mapping with Tavily Map. Discovers URLs from a starting
+point without extracting page content.
+
+Parameters:
+
+- `url` (string | string[], required): Starting URL for the map (only
+  the first URL is used)
+- `extract_depth` (string, optional): Extraction depth - 'basic'
+  (default: depth 1, up to 50 URLs) or 'advanced' (depth 3, up to 200
+  URLs)
+
+Example:
+
+```json
+{
+	"url": "https://docs.tavily.com",
+	"extract_depth": "basic"
+}
+```
+
+Response includes:
+
+- List of all discovered URLs
+- Metadata including site title and URL count
+
 #### firecrawl_scrape_process
 
 Extract clean, LLM-ready data from single URLs with enhanced
@@ -967,7 +1028,7 @@ docker run -d \
 
 Configure the container using environment variables for each provider:
 
-- `TAVILY_API_KEY`: For Tavily Search
+- `TAVILY_API_KEY`: For Tavily Search, Extract, Crawl, and Map
 - `PERPLEXITY_API_KEY`: For Perplexity AI
 - `KAGI_API_KEY`: For Kagi services (FastGPT, Summarizer, Enrichment)
 - `JINA_AI_API_KEY`: For Jina AI services (Reader, Grounding)
@@ -1053,9 +1114,16 @@ pnpm publish
 Each provider requires its own API key and may have different access
 requirements:
 
-- **Tavily**: Requires an API key from their developer portal
+- **Tavily**: Requires an API key from their developer portal. In
+  addition to Search and Extract, Tavily now also offers Crawl and Map
+  endpoints, both supported here (`tavily_crawl_process`,
+  `tavily_map_process`)
 - **Perplexity**: API access through their developer program
-- **Kagi**: Some features limited to Business (Team) plan users
+- **Kagi**: Search now uses Kagi's v1 API (`Bearer` auth, JSON POST to
+  `https://kagi.com/api/v1/search`), which replaced the older v0 "Bot"
+  auth GET endpoint. FastGPT, the Universal Summarizer, and Enrichment
+  still run on Kagi's v0 API as of this writing. Some features are
+  limited to Business (Team) plan users
 - **Jina AI**: API key required for all services
 - **Brave**: API key from their developer portal
 - **GitHub**: Personal access token with **no scopes selected**

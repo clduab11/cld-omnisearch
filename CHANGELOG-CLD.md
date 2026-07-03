@@ -7,6 +7,31 @@ The format is based on
 project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **Kagi Search**: migrated `search_kagi`/`web_search` (kagi provider)
+  from Kagi's legacy v0 Search API (`Bot` auth, GET, `data[]`
+  response) to the current v1 Search API (`Bearer` auth, JSON POST to
+  `https://kagi.com/api/v1/search`, results under `data.search[]`).
+  Kagi FastGPT, the Universal Summarizer, and Enrichment API remain on
+  v0, which is still current for those endpoints.
+- **Firecrawl Extract**: updated from the deprecated `/v1/extract`
+  endpoint to the current `/v2/extract` endpoint.
+- **Tavily Extract**: fixed `failed_results` handling to correctly
+  read the `{url, error}` object shape returned by the API instead of
+  treating it as a plain string array.
+
+### Added
+
+- **Tavily Crawl** (`tavily_crawl_process`): new tool wrapping
+  Tavily's `/crawl` endpoint for graph-based website crawling with
+  built-in content extraction.
+- **Tavily Map** (`tavily_map_process`): new tool wrapping Tavily's
+  `/map` endpoint for fast site URL discovery without content
+  extraction.
+
 ## [0.1.2] - 2025-10-16
 
 ### Verified

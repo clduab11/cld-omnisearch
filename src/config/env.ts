@@ -45,7 +45,10 @@ export const config = {
 		},
 		kagi: {
 			api_key: KAGI_API_KEY,
-			base_url: 'https://kagi.com/api/v0',
+			// Kagi migrated the Search API from the v0 "Bot" auth scheme to
+			// the v1 API (Bearer auth, JSON POST body). FastGPT, Enrichment,
+			// and the Summarizer still run on v0 as of this writing.
+			base_url: 'https://kagi.com/api/v1',
 			timeout: 20000, // 20 seconds
 		},
 		github: {
@@ -91,6 +94,16 @@ export const config = {
 			api_key: TAVILY_API_KEY,
 			base_url: 'https://api.tavily.com',
 			timeout: 30000, // 30 seconds
+		},
+		tavily_crawl: {
+			api_key: TAVILY_API_KEY,
+			base_url: 'https://api.tavily.com',
+			timeout: 150000, // Tavily allows up to 150 seconds for crawl
+		},
+		tavily_map: {
+			api_key: TAVILY_API_KEY,
+			base_url: 'https://api.tavily.com',
+			timeout: 150000, // Tavily allows up to 150 seconds for map
 		},
 		firecrawl_scrape: {
 			api_key: FIRECRAWL_API_KEY,
