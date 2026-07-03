@@ -9,6 +9,10 @@
 	"bin": {
 		"cld-omnisearch": "dist/index.js"
 	},
+	"engines": {
+		"node": ">=22"
+	},
+	"packageManager": "pnpm@11.9.0",
 	"files": [
 		"dist",
 		"README.md",
@@ -56,16 +60,16 @@
 	"author": "Scott Spence (original), Enhanced for Msty Studio by clduab11",
 	"license": "MIT",
 	"devDependencies": {
-		"@changesets/cli": "^2.29.7",
+		"@changesets/cli": "^2.31.0",
 		"@types/node": "^24.7.2",
-		"prettier": "^3.6.2",
-		"typescript": "^5.9.3"
+		"prettier": "^3.9.4",
+		"typescript": "^6.0.3"
 	},
 	"dependencies": {
-		"@tmcp/adapter-valibot": "^0.1.4",
-		"@tmcp/transport-stdio": "^0.3.1",
-		"octokit": "^5.0.3",
-		"tmcp": "^1.14.0",
-		"valibot": "^1.1.0"
+		"@tmcp/adapter-valibot": "^0.1.6",
+		"@tmcp/transport-stdio": "^0.4.3",
+		"octokit": "^5.0.5",
+		"tmcp": "^1.19.4",
+		"valibot": "^1.4.2"
 	}
 }

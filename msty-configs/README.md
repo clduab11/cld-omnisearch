@@ -1,6 +1,7 @@
 # Msty Studio Configuration Examples
 
-This directory contains pre-configured JSON templates for setting up CLD Omnisearch in Msty Studio.
+This directory contains pre-configured JSON templates for setting up
+CLD Omnisearch in Msty Studio.
 
 ## How to Use These Configurations
 
@@ -14,6 +15,7 @@ This directory contains pre-configured JSON templates for setting up CLD Omnisea
 ## Available Configurations
 
 ### 1. minimal-config.json
+
 **Best for:** Users who set API keys in Msty Environments
 
 - Uses environment variables with `MSTY_` prefix
@@ -22,11 +24,13 @@ This directory contains pre-configured JSON templates for setting up CLD Omnisea
 - Requires setting up Msty Environments first
 
 **Setup Steps:**
+
 1. Create Msty Environment with variables like `MSTY_TAVILY_API_KEY`
 2. Use this minimal configuration
 3. Activate your environment
 
 ### 2. full-config-with-parameters.json
+
 **Best for:** Complete setup with all providers
 
 - Includes all supported providers
@@ -35,6 +39,7 @@ This directory contains pre-configured JSON templates for setting up CLD Omnisea
 - Set default values via tool parameters
 
 **Providers included:**
+
 - Tavily Search
 - Brave Search
 - Kagi (Search, FastGPT, Summarizer, Enrichment)
@@ -45,6 +50,7 @@ This directory contains pre-configured JSON templates for setting up CLD Omnisea
 - GitHub Search
 
 ### 3. basic-search-only.json
+
 **Best for:** Simple web search functionality
 
 - Tavily, Brave, and Kagi search only
@@ -52,11 +58,13 @@ This directory contains pre-configured JSON templates for setting up CLD Omnisea
 - Good for getting started
 
 **Use this if you:**
+
 - Only need web search capabilities
 - Want to keep it simple
 - Don't need AI responses or content processing
 
 ### 4. ai-and-github.json
+
 **Best for:** AI assistance and code search
 
 - Perplexity AI for intelligent responses
@@ -64,6 +72,7 @@ This directory contains pre-configured JSON templates for setting up CLD Omnisea
 - GitHub search for code examples
 
 **Use this if you:**
+
 - Focus on development work
 - Need code search and AI help
 - Don't need general web search
@@ -74,27 +83,31 @@ Msty Studio tool configurations use this structure:
 
 ```json
 {
-  "command": "npx",           // The command to run
-  "args": ["-y", "tool-name"], // Arguments for the command
-  "env": {                     // Environment variables
-    "VAR_NAME": "{VAR_NAME:Description:DefaultValue}"
-  }
+	"command": "npx", // The command to run
+	"args": ["-y", "tool-name"], // Arguments for the command
+	"env": {
+		// Environment variables
+		"VAR_NAME": "{VAR_NAME:Description:DefaultValue}"
+	}
 }
 ```
 
 ### Mustache Template Syntax
 
 Msty Studio supports parameter templates in this format:
+
 ```
 {VARIABLE_NAME:Description:Default Value}
 ```
 
 **Examples:**
+
 - `{API_KEY:Your API Key:}` - Required parameter, no default
 - `{API_KEY:Your API Key:sk-1234}` - Optional with default value
 - `{BASE_URL:Custom URL:http://localhost:3000}` - With default URL
 
-When you set default parameters (asterisk icon), these templates get replaced with actual values.
+When you set default parameters (asterisk icon), these templates get
+replaced with actual values.
 
 ## Recommended Setup Approach
 
@@ -125,43 +138,51 @@ When you set default parameters (asterisk icon), these templates get replaced wi
 
 CLD Omnisearch supports both standard and `MSTY_` prefixed variables:
 
-| Standard Variable | Msty Environment Variable | Description |
-|------------------|---------------------------|-------------|
-| `TAVILY_API_KEY` | `MSTY_TAVILY_API_KEY` | Tavily Search API |
-| `BRAVE_API_KEY` | `MSTY_BRAVE_API_KEY` | Brave Search API |
-| `KAGI_API_KEY` | `MSTY_KAGI_API_KEY` | Kagi services |
-| `PERPLEXITY_API_KEY` | `MSTY_PERPLEXITY_API_KEY` | Perplexity AI |
-| `JINA_AI_API_KEY` | `MSTY_JINA_AI_API_KEY` | Jina AI services |
-| `EXA_API_KEY` | `MSTY_EXA_API_KEY` | Exa AI services |
-| `FIRECRAWL_API_KEY` | `MSTY_FIRECRAWL_API_KEY` | Firecrawl services |
-| `GITHUB_API_KEY` | `MSTY_GITHUB_API_KEY` | GitHub token |
+| Standard Variable    | Msty Environment Variable | Description           |
+| -------------------- | ------------------------- | --------------------- |
+| `TAVILY_API_KEY`     | `MSTY_TAVILY_API_KEY`     | Tavily Search API     |
+| `BRAVE_API_KEY`      | `MSTY_BRAVE_API_KEY`      | Brave Search API      |
+| `KAGI_API_KEY`       | `MSTY_KAGI_API_KEY`       | Kagi services         |
+| `PERPLEXITY_API_KEY` | `MSTY_PERPLEXITY_API_KEY` | Perplexity AI         |
+| `JINA_AI_API_KEY`    | `MSTY_JINA_AI_API_KEY`    | Jina AI services      |
+| `EXA_API_KEY`        | `MSTY_EXA_API_KEY`        | Exa AI services       |
+| `FIRECRAWL_API_KEY`  | `MSTY_FIRECRAWL_API_KEY`  | Firecrawl services    |
+| `GITHUB_API_KEY`     | `MSTY_GITHUB_API_KEY`     | GitHub token          |
 | `FIRECRAWL_BASE_URL` | `MSTY_FIRECRAWL_BASE_URL` | Self-hosted Firecrawl |
 
 ## Tips
 
-1. **Start Small**: Don't configure all providers at once. Start with 1-2 and expand.
+1. **Start Small**: Don't configure all providers at once. Start with
+   1-2 and expand.
 
-2. **Use Environments**: For managing multiple API keys, Msty Environments are cleaner than tool parameters.
+2. **Use Environments**: For managing multiple API keys, Msty
+   Environments are cleaner than tool parameters.
 
-3. **Security**: Never commit API keys to version control. Use tool parameters or environments.
+3. **Security**: Never commit API keys to version control. Use tool
+   parameters or environments.
 
-4. **Testing**: After configuration, check Sidecar logs to verify which providers loaded successfully.
+4. **Testing**: After configuration, check Sidecar logs to verify
+   which providers loaded successfully.
 
-5. **Fallbacks**: If an environment variable isn't found, the server will only load providers with valid keys.
+5. **Fallbacks**: If an environment variable isn't found, the server
+   will only load providers with valid keys.
 
 ## Troubleshooting
 
 ### "No providers available"
+
 - Check that at least one API key is set correctly
 - Verify the environment is active (if using Environments)
 - Check Sidecar logs for details
 
 ### "API key not found for X"
+
 - That specific provider's key is missing or incorrect
 - Add it to your Environment or tool parameters
 - Check for typos in variable names
 
 ### Tool not appearing
+
 - Ensure Sidecar is running (for Web)
 - Check that NPX and Node.js are installed
 - View Sidecar logs for errors

@@ -1,5 +1,5 @@
-# Use Node.js 20 LTS Alpine for smallest image size
-FROM node:22-alpine
+# Use Node.js 24 LTS Alpine for smallest image size
+FROM node:24-alpine
 
 # Set working directory
 WORKDIR /app
@@ -8,8 +8,8 @@ WORKDIR /app
 RUN apk add --no-cache python3 py3-pip gettext && \
     pip3 install --break-system-packages uv
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Install pnpm globally (pinned to match packageManager in package.json)
+RUN npm install -g pnpm@11.9.0
 
 # Copy package files for dependency installation
 COPY package.json pnpm-lock.yaml ./

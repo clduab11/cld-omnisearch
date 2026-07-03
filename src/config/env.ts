@@ -9,7 +9,7 @@ const get_env_var = (name: string): string | undefined => {
 	// First try the standard variable name
 	const standard_value = process.env[name];
 	if (standard_value) return standard_value;
-	
+
 	// Then try with MSTY_ prefix for Msty Studio compatibility
 	const msty_prefixed = `MSTY_${name}`;
 	return process.env[msty_prefixed];
@@ -184,7 +184,9 @@ export const validate_config = () => {
 
 	// Log available keys
 	if (available_keys.length > 0) {
-		console.error(`✓ Found API keys for: ${available_keys.join(', ')}`);
+		console.error(
+			`✓ Found API keys for: ${available_keys.join(', ')}`,
+		);
 	} else {
 		console.error(
 			'⚠ Warning: No API keys found. No providers will be available.',

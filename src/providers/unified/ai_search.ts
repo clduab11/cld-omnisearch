@@ -10,9 +10,7 @@ import { KagiFastGPTProvider } from '../ai_response/kagi_fastgpt/index.js';
 import { PerplexityProvider } from '../ai_response/perplexity/index.js';
 
 export type AISearchProvider =
-	| 'perplexity'
-	| 'kagi_fastgpt'
-	| 'exa_answer';
+	'perplexity' | 'kagi_fastgpt' | 'exa_answer';
 
 export interface UnifiedAISearchParams extends BaseSearchParams {
 	provider: AISearchProvider;

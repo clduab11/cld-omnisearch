@@ -2,50 +2,65 @@
 
 ## Overview
 
-This document summarizes the substantial improvements made to transform the original `mcp-omnisearch` into `cld-omnisearch`, specifically optimized for **Msty Studio** compatibility.
+This document summarizes the substantial improvements made to
+transform the original `mcp-omnisearch` into `cld-omnisearch`,
+specifically optimized for **Msty Studio** compatibility.
 
 ## Key Issues Resolved
 
 ### 1. API Keys Not Being Passed Through ✅
 
-**Problem**: Msty Studio uses environment variables with `MSTY_` prefix, and the original server only supported standard environment variable names.
+**Problem**: Msty Studio uses environment variables with `MSTY_`
+prefix, and the original server only supported standard environment
+variable names.
 
 **Solution**:
+
 - Implemented dual environment variable support in `src/config/env.ts`
-- New `get_env_var()` function checks both standard and `MSTY_` prefixed variables
-- Automatic fallback: tries `TAVILY_API_KEY` first, then `MSTY_TAVILY_API_KEY`
+- New `get_env_var()` function checks both standard and `MSTY_`
+  prefixed variables
+- Automatic fallback: tries `TAVILY_API_KEY` first, then
+  `MSTY_TAVILY_API_KEY`
 - Works seamlessly with Msty's Environment feature
 
 **Code Change**:
+
 ```typescript
 const get_env_var = (name: string): string | undefined => {
-  const standard_value = process.env[name];
-  if (standard_value) return standard_value;
-  
-  const msty_prefixed = `MSTY_${name}`;
-  return process.env[msty_prefixed];
+	const standard_value = process.env[name];
+	if (standard_value) return standard_value;
+
+	const msty_prefixed = `MSTY_${name}`;
+	return process.env[msty_prefixed];
 };
 ```
 
 ### 2. Tool Call Compatibility with Msty Studio ✅
 
-**Problem**: Msty Studio's Toolbox uses a specific JSON configuration format that wasn't documented or optimized for.
+**Problem**: Msty Studio's Toolbox uses a specific JSON configuration
+format that wasn't documented or optimized for.
 
 **Solution**:
-- Created 4 pre-configured JSON templates in `msty-configs/` directory:
+
+- Created 4 pre-configured JSON templates in `msty-configs/`
+  directory:
   - `minimal-config.json` - For use with Msty Environments
-  - `full-config-with-parameters.json` - All providers with parameter templates
+  - `full-config-with-parameters.json` - All providers with parameter
+    templates
   - `basic-search-only.json` - Simple web search setup
   - `ai-and-github.json` - AI assistance and code search
-  
-- Full support for Msty's `{VAR:Description:Default}` parameter template syntax
+
+- Full support for Msty's `{VAR:Description:Default}` parameter
+  template syntax
 - Optimized for `npx -y cld-omnisearch` one-line installation
 
 ### 3. Documentation for Msty Studio ✅
 
-**Problem**: No guidance on setting up the server with Msty Studio Desktop or Web+Sidecar.
+**Problem**: No guidance on setting up the server with Msty Studio
+Desktop or Web+Sidecar.
 
 **Solution**:
+
 - Created comprehensive `MSTY_SETUP.md` with step-by-step instructions
 - Covers both Desktop and Web+Sidecar configurations
 - Includes troubleshooting section for common Msty-specific issues
@@ -53,15 +68,18 @@ const get_env_var = (name: string): string | undefined => {
 
 ### 4. Enhanced Error Messages ✅
 
-**Problem**: Generic error messages didn't guide Msty Studio users on how to fix issues.
+**Problem**: Generic error messages didn't guide Msty Studio users on
+how to fix issues.
 
 **Solution**:
+
 - Updated validation messages with Msty-specific guidance
 - Emojis for better visibility (✓, ⚠, ℹ, 💡)
 - Directs users to set `MSTY_` prefixed variables in Environments
 - Clear indication of which providers loaded successfully
 
 **Example**:
+
 ```
 ✓ Found API keys for: TAVILY_API_KEY, BRAVE_API_KEY
 ℹ Missing API keys for: KAGI_API_KEY, PERPLEXITY_API_KEY
@@ -72,15 +90,18 @@ const get_env_var = (name: string): string | undefined => {
 
 ### 1. Msty Studio Environment Integration
 
-**What it does**: Automatically detects and uses variables from Msty's Environment feature
+**What it does**: Automatically detects and uses variables from Msty's
+Environment feature
 
 **Benefits**:
+
 - Centralized API key management
 - Easy switching between different configurations
 - Secure storage (browser local storage for Web, local for Desktop)
 - Shared across all tools that need the same keys
 
 **Usage**:
+
 ```
 Msty Environment Variables:
 MSTY_TAVILY_API_KEY = tvly-xxxxx
@@ -90,17 +111,20 @@ MSTY_KAGI_API_KEY = kagi-xxxxx
 
 ### 2. Parameter Template Support
 
-**What it does**: Full compatibility with Msty's mustache-style parameter templates
+**What it does**: Full compatibility with Msty's mustache-style
+parameter templates
 
-**Format**: `{VARIABLE_NAME:User-Friendly Description:Optional Default Value}`
+**Format**:
+`{VARIABLE_NAME:User-Friendly Description:Optional Default Value}`
 
 **Example**:
+
 ```json
 {
-  "env": {
-    "TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily Search API Key for factual queries:}",
-    "BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API Key (privacy-focused):}"
-  }
+	"env": {
+		"TAVILY_API_KEY": "{TAVILY_API_KEY:Tavily Search API Key for factual queries:}",
+		"BRAVE_API_KEY": "{BRAVE_API_KEY:Brave Search API Key (privacy-focused):}"
+	}
 }
 ```
 
@@ -111,6 +135,7 @@ MSTY_KAGI_API_KEY = kagi-xxxxx
 **Command**: `npx -y cld-omnisearch`
 
 **Benefits**:
+
 - No global npm install required
 - Always uses latest version
 - Perfect for Msty Studio's tool architecture
@@ -118,9 +143,11 @@ MSTY_KAGI_API_KEY = kagi-xxxxx
 
 ### 4. Flexible Provider Loading
 
-**What it does**: Only loads providers for which API keys are available
+**What it does**: Only loads providers for which API keys are
+available
 
 **Benefits**:
+
 - Start with just 1-2 providers
 - Add more as you get API keys
 - No errors from missing providers
@@ -189,29 +216,28 @@ MSTY_KAGI_API_KEY = kagi-xxxxx
 ## Testing and Validation
 
 ### Build Status
-✅ TypeScript compilation successful
-✅ No errors in build process
-✅ Executable permissions set correctly
+
+✅ TypeScript compilation successful ✅ No errors in build process ✅
+Executable permissions set correctly
 
 ### Compatibility Verified
-✅ Environment variable fallback logic
-✅ MSTY_ prefix support
-✅ Standard variable names still work
-✅ NPX execution ready
+
+✅ Environment variable fallback logic ✅ MSTY_ prefix support ✅
+Standard variable names still work ✅ NPX execution ready
 
 ### Documentation Coverage
-✅ Msty Studio Desktop setup
-✅ Msty Studio Web with Sidecar setup
-✅ Environment Variables guide
-✅ Tool configuration templates
-✅ Troubleshooting for common issues
-✅ Example configurations for different use cases
+
+✅ Msty Studio Desktop setup ✅ Msty Studio Web with Sidecar setup ✅
+Environment Variables guide ✅ Tool configuration templates ✅
+Troubleshooting for common issues ✅ Example configurations for
+different use cases
 
 ## Installation and Usage
 
 ### For Msty Studio Users
 
 1. **Quick Install**:
+
    ```bash
    npx -y cld-omnisearch
    ```
@@ -230,6 +256,7 @@ MSTY_KAGI_API_KEY = kagi-xxxxx
 ### Supported Models
 
 Works with any model that supports MCP tool calling:
+
 - ✅ Claude 3.5 Sonnet
 - ✅ Claude 3 Opus
 - ✅ GPT-4, GPT-4 Turbo
@@ -248,7 +275,8 @@ Works with any model that supports MCP tool calling:
 
 ### For Developers
 
-1. **Clean Code**: Dual environment variable support without breaking changes
+1. **Clean Code**: Dual environment variable support without breaking
+   changes
 2. **Backward Compatible**: Still works with standard env vars
 3. **Well Documented**: Clear code comments and documentation
 4. **Extensible**: Easy to add more providers
@@ -258,13 +286,15 @@ Works with any model that supports MCP tool calling:
 
 1. **Native Integration**: Follows Msty's tool configuration patterns
 2. **Environment Support**: Works seamlessly with Msty Environments
-3. **Parameter Templates**: Full support for `{VAR:Desc:Default}` syntax
+3. **Parameter Templates**: Full support for `{VAR:Desc:Default}`
+   syntax
 4. **Sidecar Ready**: Works with both Desktop and Web+Sidecar
 5. **Best Practices**: Follows Msty documentation recommendations
 
 ## Provider Support
 
 ### Search Providers
+
 - ✅ Tavily Search (factual, with citations)
 - ✅ Brave Search (privacy-focused, operators)
 - ✅ Kagi Search (high-quality, operators)
@@ -272,11 +302,13 @@ Works with any model that supports MCP tool calling:
 - ✅ GitHub Search (code, repositories, users)
 
 ### AI Response Providers
+
 - ✅ Perplexity AI (real-time web + AI)
 - ✅ Kagi FastGPT (fast, 900ms response)
 - ✅ Exa Answer (AI-generated answers)
 
 ### Content Processing
+
 - ✅ Jina Reader (clean extraction)
 - ✅ Kagi Summarizer (content summary)
 - ✅ Tavily Extract (raw content)
@@ -285,6 +317,7 @@ Works with any model that supports MCP tool calling:
 - ✅ Exa Similar (find similar pages)
 
 ### Enhancement
+
 - ✅ Kagi Enrichment (specialized indexes)
 - ✅ Jina Grounding (fact verification)
 
@@ -300,8 +333,10 @@ Works with any model that supports MCP tool calling:
 
 ### Future Enhancements
 
-1. **Auto-Configuration**: Detect Msty Studio environment automatically
-2. **Provider Presets**: Quick configs for common provider combinations
+1. **Auto-Configuration**: Detect Msty Studio environment
+   automatically
+2. **Provider Presets**: Quick configs for common provider
+   combinations
 3. **Usage Analytics**: Track which providers are most used
 4. **Rate Limiting UI**: Show API quota usage in Msty
 5. **Provider Health Checks**: Validate API keys before use
@@ -309,32 +344,46 @@ Works with any model that supports MCP tool calling:
 ## Troubleshooting Quick Reference
 
 ### Issue: "No providers available"
-**Fix**: Set at least one API key in Msty Environments with `MSTY_` prefix or in tool parameters
+
+**Fix**: Set at least one API key in Msty Environments with `MSTY_`
+prefix or in tool parameters
 
 ### Issue: "API key not found for X"
-**Fix**: Add that provider's key to Environment or tool parameters. Check for typos.
+
+**Fix**: Add that provider's key to Environment or tool parameters.
+Check for typos.
 
 ### Issue: Tool not appearing in Sidecar
-**Fix**: Check Sidecar logs, verify Node.js installation (use Volta, not NVM), restart Sidecar
+
+**Fix**: Check Sidecar logs, verify Node.js installation (use Volta,
+not NVM), restart Sidecar
 
 ### Issue: Model not using tools
-**Fix**: Ensure model supports tool calling. Try explicitly asking: "Use search tools to answer..."
+
+**Fix**: Ensure model supports tool calling. Try explicitly asking:
+"Use search tools to answer..."
 
 ### Issue: Slow responses
-**Fix**: Normal for web scraping/crawling. Use faster providers like Kagi FastGPT for quick queries.
+
+**Fix**: Normal for web scraping/crawling. Use faster providers like
+Kagi FastGPT for quick queries.
 
 ## Conclusion
 
-The CLD Omnisearch fork successfully addresses all the key issues with Msty Studio compatibility:
+The CLD Omnisearch fork successfully addresses all the key issues with
+Msty Studio compatibility:
 
-1. ✅ API keys are now properly passed through using both standard and MSTY_ prefixed variables
+1. ✅ API keys are now properly passed through using both standard and
+   MSTY_ prefixed variables
 2. ✅ Full breadth and depth of tool capabilities available to models
 3. ✅ Native Msty Studio integration with parameter templates
 4. ✅ Comprehensive documentation for setup and troubleshooting
 5. ✅ Example configurations for different use cases
 6. ✅ Enhanced error messages guide users to solutions
 
-The server is now **production-ready for Msty Studio** and provides a superior experience for users wanting to leverage multiple search and AI providers through a unified MCP interface.
+The server is now **production-ready for Msty Studio** and provides a
+superior experience for users wanting to leverage multiple search and
+AI providers through a unified MCP interface.
 
 ## Links and Resources
 

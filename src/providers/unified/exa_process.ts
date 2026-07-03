@@ -19,9 +19,7 @@ export interface UnifiedExaProcessingProvider {
 	): Promise<ProcessingResult>;
 }
 
-export class UnifiedExaProcessProvider
-	implements UnifiedExaProcessingProvider
-{
+export class UnifiedExaProcessProvider implements UnifiedExaProcessingProvider {
 	name = 'exa_process';
 	description =
 		'Extract content with Exa. Modes: contents (full content from result IDs), similar (find similar pages).';
